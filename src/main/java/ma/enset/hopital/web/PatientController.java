@@ -22,15 +22,19 @@ public class PatientController {
     private PatientRepository patientRepository;
     @GetMapping("/index")
     public String index(Model model,
-                        @RequestParam(name = "page",defaultValue = "0") int p,
+                        @RequestParam(name = "page",defaultValue = "1") int p,
                         @RequestParam(name = "size",defaultValue = "4")int s,
                         @RequestParam(name = "keyword",defaultValue = "")String kw
                         ){
+        p = p > 0 ? --p:0;
         Page<Patient> pagePatients=patientRepository.findByNomContains(kw,PageRequest.of(p,s));
         model.addAttribute("listPatients",pagePatients.getContent());
         model.addAttribute("pages",new int[pagePatients.getTotalPages()]);
+        model.addAttribute("totalPages",pagePatients.getTotalPages());
         model.addAttribute("currentPage",p);
         model.addAttribute("keyword",kw);
+        model.addAttribute("isFirstPage",pagePatients.isFirst());
+        model.addAttribute("isLastPage",pagePatients.isLast());
         return "patients";
     }
     @GetMapping("/delete")

@@ -45,13 +45,32 @@
                       </tr>
                       </thead>
                   </table>
-                  <ul class="nav nav-pills">
-                      <li th:each="v,item:${pages}">
-                          <a th:href="@{/index(page=${item.index},keyword=${keyword})}"
-                             th:class="${(currentPage==item.index)?'btn btn-info ms-1':'btn btn-outline-info ms-1'}"
-                             th:text="${1+item.index}"></a>
-                      </li>
-                  </ul>
+              </div>
+              <div class="card-footer d-flex justify-content-center">
+                  <nav aria-label="Page navigation example">
+                      <ul class="pagination m-0">
+                          <li class="page-item" th:if="${!isFirstPage}">
+                              <a class="page-link" th:href="@{/index(keyword=${keyword},page=${1})}">First Page</a>
+                          </li>
+                          <li class="page-item" th:if="${!isFirstPage}">
+                              <a class="page-link" th:href="@{/index(keyword=${keyword},page=${currentPage})}"><span aria-hidden="true">&laquo;</span></a>
+                          </li>
+                          <li class="page-item" th:each="v,item : ${pages}" th:classappend="${item.index==currentPage}?active:''"
+                              th:if="${item.index==currentPage} or
+                               ${item.index==currentPage+1} or
+                               ${item.index==currentPage -1} or
+                              (${item.first} and ${item.index+2>currentPage}) or
+                              (${item.last} and ${item.index -2<currentPage})">
+                              <a class="page-link" th:href="@{/index(page=${item.count},keyword=${keyword})}" th:text="${item.count}"></a>
+                          </li>
+                          <li class="page-item" th:if="${!isLastPage}">
+                              <a class="page-link" th:href="@{/index(keyword=${keyword},page=${currentPage +2})}"><span aria-hidden="true">&raquo;</span></a>
+                          </li>
+                          <li class="page-item" th:if="${!isLastPage}">
+                              <a class="page-link" th:href="@{/index(keyword=${keyword},page=${totalPages})}">Last Page</a>
+                          </li>
+                      </ul>
+                  </nav>
               </div>
           </div>
       </div>
